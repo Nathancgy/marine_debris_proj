@@ -1,6 +1,6 @@
-train: 
-val: 
-test: 
+train: /Users/nathanchen/Desktop/Competitions/Avant/sea_debris_proj/data/bottle/train/images
+val: /Users/nathanchen/Desktop/Competitions/Avant/sea_debris_proj/data/bottle/valid/images
+test: /Users/nathanchen/Desktop/Competitions/Avant/sea_debris_proj/data/bottle/test/images
 
 nc: 1
 names: ['Bottle']
