@@ -1,8 +1,8 @@
 import pandas as pd
 import os
 
-excel_file_path = ''
-output_directory = ''
+excel_file_path = '/'
+output_directory = '/'
 
 os.makedirs(output_directory, exist_ok=True)
 
