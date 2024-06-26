@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 
 # Change with your weights file
-model = YOLO("weights.pt")
+model = YOLO("Trained_Weights.pt")
 
 # Change with your source file
-predictframe=model.predict(source="your/path",show=True)
+predictframe=model.predict(source="Drone Videos/Pictures/Test.jpg",show=True,save=True)

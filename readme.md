@@ -14,12 +14,32 @@ cd marine_debris_proj
 pip install -r requirements.txt
 ```
 
+## Training
+Configure the config.yaml file to have the paths to your training images.
+```bash
+config.yaml
+```
+Run the train script.
+```bash
+train.py
+```
+or use the CLI command
+```bash
+yolo task=detect mode=train epochs=[num of epochs] batch=[num of batches] plots=True model=[your weights] data=config.yaml imgsz=1000
+```
+
+
 ## Usage
 - **Weights**: Pretrained weights are not yet released. They are being verified and improved for further usages.
 Run the detection script with customed weights:
 ```bash
 python run.py
 ```
+or use the CLI command
+```bash
+yolo detect predict model=[Your Weights] source=[source].jpg
+```
+
 ## Future Work
 This project is in the development phase and aims to be implemented in real-world scenarios.
 

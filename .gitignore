@@ -2,6 +2,7 @@ runs
 weights.pt
 .ipynb_checkpoints
 data
+data
 Drone Videos
 downloaddata.py
 downloader.py
