@@ -9,7 +9,7 @@ def stitch_images(images):
         print("Error during stitching.")
         return None
 
-video_path = "/Users/nathanchen/Downloads/DJI_0006.MP4"
+video_path = "/Users/nathanchen/Desktop/1.MP4"
 cap = cv2.VideoCapture(video_path)
 
 if not cap.isOpened():
@@ -19,7 +19,7 @@ if not cap.isOpened():
 images = []
 frame_count = 0
 recorded_count = 0
-interval = 3
+interval = 5
 
 fps = cap.get(cv2.CAP_PROP_FPS)
 if fps == 0:

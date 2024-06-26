@@ -62,7 +62,7 @@ def process_video(file_path):
     cap.release()
     out.release()
 
-@app.route('/processed/<filename>')
+@app.route('/<filename>')
 def processed_file(filename):
     return render_template('processed.html', filename='processed_' + filename)
 
@@ -73,3 +73,4 @@ def get_progress():
 
 if __name__ == "__main__":
     app.run(debug=True)
+

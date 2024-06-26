@@ -10,7 +10,7 @@ def stitch_images(images):
         print(f"Error during stitching. Status code: {status}")
         return None
 
-folder_path = "/Users/nathanchen/Desktop"
+folder_path = "/Users/nathanchen/Desktop/Competitions/Avant/sea_debris_proj/stitchdata"
 
 images = []
 
