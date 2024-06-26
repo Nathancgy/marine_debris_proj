@@ -4,4 +4,4 @@ from ultralytics import YOLO
 model = YOLO("weights.pt")
 
 # Change with your source file
-predictframe=model.predict(source="",show=True)
+predictframe=model.predict(source="your/path",show=True)

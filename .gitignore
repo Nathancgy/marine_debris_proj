@@ -1,3 +1,13 @@
 runs
 weights.pt
 .ipynb_checkpoints
+data
+Drone Videos
+downloaddata.py
+downloader.py
+fiftyone donload.py
+Test_Img.jpg
+Marine-Debris-1
+Trained_Weights.pt
+yolov10n.pt
+yolov10s.pt
