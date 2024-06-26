@@ -1,6 +1,6 @@
 # Marine Debris Detection Project
 
-This repository contains a YOLOv10-based project for detecting marine debris on sandy beaches. The dataset includes approximately 400 images categorized into seven types of debris: plastic bottle, styrofoam, plastic container, plastic bag, can, and tire. Each image is annotated with bounding boxes suitable for YOLOv10 training.
+This repository contains a YOLOv10-based project for detecting marine debris on sandy beaches. The dataset (made by the owners of this repository: [Nathancgy](https://github.com/Nathancgy) and [KrishManan](https://github.com/KrishManan)) includes approximately 400 images categorized into seven types of debris: plastic bottle, styrofoam, plastic container, plastic bag, can, and tire. Each image is annotated with bounding boxes suitable for YOLOv10 training.
 
 ## Features
 - **Data**: 400 images with annotations for seven categories of marine debris.
