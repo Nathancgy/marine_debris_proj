@@ -1,6 +1,6 @@
-train: /Users/nathanchen/Desktop/Competitions/Avant/sea_debris_proj/data/bottle/train/images
-val: /Users/nathanchen/Desktop/Competitions/Avant/sea_debris_proj/data/bottle/valid/images
-test: /Users/nathanchen/Desktop/Competitions/Avant/sea_debris_proj/data/bottle/test/images
+train: 
+val: 
+test: 
 
-nc: 1
-names: ['Bottle']
+nc: 7
+names: ['can', 'carton', 'plastic bag', 'plastic bottle', 'plastic container', 'styrofoam', 'tire']
