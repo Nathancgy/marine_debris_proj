@@ -6,6 +6,15 @@ This repository contains a YOLOv10-based project for detecting marine debris on 
 - **Data**: 400 images with annotations for seven categories of marine debris.
 - **Model**: Fine-tuned YOLOv10 model for accurate prediction of plastic waste.
 
+### Validation Label
+<img src = 'https://github.com/Nathancgy/marine_debris_proj/blob/main/img/val_label.jpg?raw=true' width = '600'>
+
+### Validation Prediction
+<img src = 'https://github.com/Nathancgy/marine_debris_proj/blob/main/img/val_pred.jpg?raw=true' width = '600'>
+
+### Sample Result on Beach. Photo taken on 06/25/2024.
+<img src = 'https://github.com/Nathancgy/marine_debris_proj/blob/main/img/beach.png?raw=true' width = '600'>
+
 ## Installation
 Clone the repository and install the required packages:
 ```bash
