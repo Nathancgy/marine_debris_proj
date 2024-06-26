@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marine Debris Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Video for Marine Debris Detection</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" class="input-file">
+            <input type="submit" value="Upload" class="btn" onclick="startProgress()">
+        </form>
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+    <script>
+        function startProgress() {
+            let progressBar = document.getElementById('progress-bar');
+            let width = 0;
+            let interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                } else {
+                    fetch('/progress')
+                        .then(response => response.json())
+                        .then(data => {
+                            width = data.progress;
+                            progressBar.style.width = width + '%';
+                        });
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

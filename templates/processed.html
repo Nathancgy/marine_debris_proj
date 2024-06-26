@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processed Video</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Processed Video</h1>
+        <video width="640" height="480" controls>
+            <source src="{{ url_for('static', filename='processed/' + filename) }}" type="video/mp4">
+        </video>
+        <br>
+        <a href="/" class="btn">Upload Another Video</a>
+    </div>
+</body>
+</html>
