@@ -1,8 +1,10 @@
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    color: #333;
 }
 
 .container {
@@ -17,10 +19,36 @@ body {
 h1 {
     margin-bottom: 20px;
     color: #333;
+    font-size: 2em;
+    transition: color 0.3s ease;
+}
+
+h1:hover {
+    color: #007BFF;
+}
+
+h2 {
+    color: #555;
+    margin-top: 30px;
+    font-size: 1.5em;
+}
+
+form {
+    margin-bottom: 30px;
 }
 
 .input-file {
-    margin: 20px 0;
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    border: 2px dashed #007BFF;
+    border-radius: 10px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.input-file:hover {
+    border-color: #0056b3;
+    background-color: #f0f8ff;
 }
 
 .btn {
@@ -30,10 +58,14 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn:hover {
     background-color: #0056b3;
+    transform: translateY(-3px);
 }
 
 #ffmpeg-progress-container, #yolo-progress-container {
@@ -42,10 +74,74 @@ h1 {
     border-radius: 10px;
     overflow: hidden;
     margin: 20px 0;
+    position: relative;
 }
 
 #ffmpeg-progress-bar, #yolo-progress-bar {
     height: 20px;
     width: 0;
     background-color: #76c7c0;
+    transition: width 0.5s ease;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background: #f9f9f9;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+li:hover {
+    transform: scale(1.02);
+    background-color: #eef;
+}
+
+strong {
+    color: #333;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    h2 {
+        font-size: 1.2em;
+    }
+
+    li {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.2em;
+    }
+
+    h2 {
+        font-size: 1em;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.9em;
+    }
+
+    video {
+        width: 100%;
+        height: auto;
+    }
 }

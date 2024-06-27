@@ -17,6 +17,7 @@ app.config['FRAMES_FOLDER'] = FRAMES_FOLDER
 
 ffmpeg_progress = 0
 yolo_progress = 0
+detection_data = []
 
 @app.route('/')
 def index():
@@ -24,9 +25,10 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    global ffmpeg_progress, yolo_progress
+    global ffmpeg_progress, yolo_progress, detection_data
     ffmpeg_progress = 0
     yolo_progress = 0
+    detection_data = []
     if 'file' not in request.files:
         return redirect(request.url)
     file = request.files['file']
@@ -58,7 +60,7 @@ def delete_frames(folder):
     shutil.rmtree(folder)
 
 def process_video(file_path):
-    global yolo_progress
+    global yolo_progress, detection_data
     frames_folder = app.config['FRAMES_FOLDER']
     frame_pattern = 'frame%03d.png'
     output_path = os.path.join(app.config['PROCESSED_FOLDER'], 'processed_' + os.path.basename(file_path))
@@ -70,18 +72,42 @@ def process_video(file_path):
     frames = sorted(os.listdir(frames_folder))
     total_frames = len(frames)
     
+    detected_objects = {}
+    previous_detections = []
+
     for i, frame in enumerate(frames):
         frame_path = os.path.join(frames_folder, frame)
         img = cv2.imread(frame_path)
         results = model.predict(source=img)
+        new_detections = []
+
         for result in results:
             boxes = result.boxes
             for box in boxes:
                 x1, y1, x2, y2 = box.xyxy[0]
                 label = result.names[int(box.cls)]
                 confidence = box.conf.item()  # Convert tensor to float
+
+                # Draw bounding box and label
                 cv2.rectangle(img, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)
                 cv2.putText(img, f'{label} {confidence:.2f}', (int(x1), int(y1)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+
+                # Check if the current detection overlaps with any previous detection
+                current_bbox = (x1, y1, x2, y2)
+                if not any(iou(current_bbox, prev_bbox) > 0.5 for prev_bbox in previous_detections):
+                    if label not in detected_objects:
+                        detected_objects[label] = 0
+                    detected_objects[label] += 1
+                    new_detections.append(current_bbox)
+
+                    # Add detection data to the list
+                    detection_data.append({
+                        'label': label,
+                        'confidence': confidence,
+                        'coordinates': (int(x1), int(y1), int(x2), int(y2))
+                    })
+
+        previous_detections = new_detections
         cv2.imwrite(frame_path, img)
         yolo_progress = int((i / total_frames) * 100)
         print(f'Processing frame {i+1}/{total_frames} ({yolo_progress}%)')
@@ -91,6 +117,30 @@ def process_video(file_path):
 
     # Delete the frames
     delete_frames(frames_folder)
+
+    print(f"Detected objects: {detected_objects}")
+
+def iou(bbox1, bbox2):
+    x1_min, y1_min, x1_max, y1_max = bbox1
+    x2_min, y2_min, x2_max, y2_max = bbox2
+
+    # Calculate the (x, y)-coordinates of the intersection rectangle
+    inter_x_min = max(x1_min, x2_min)
+    inter_y_min = max(y1_min, y2_min)
+    inter_x_max = min(x1_max, x2_max)
+    inter_y_max = min(y1_max, y2_max)
+
+    # Compute the area of intersection rectangle
+    inter_area = max(0, inter_x_max - inter_x_min) * max(0, inter_y_max - inter_y_min)
+
+    # Compute the area of both the prediction and ground-truth rectangles
+    bbox1_area = (x1_max - x1_min) * (y1_max - y1_min)
+    bbox2_area = (x2_max - x2_min) * (y2_max - y2_min)
+
+    # Compute the intersection over union by taking the intersection area and dividing it by the sum of prediction + ground-truth areas - the intersection area
+    iou = inter_area / float(bbox1_area + bbox2_area - inter_area)
+
+    return iou
 
 @app.route('/ffmpeg_progress')
 def get_ffmpeg_progress():
@@ -104,7 +154,7 @@ def get_yolo_progress():
 
 @app.route('/processed/<filename>')
 def processed_file(filename):
-    return render_template('processed.html', filename='processed_' + filename)
+    return render_template('processed.html', filename='processed_' + filename, detection_data=detection_data)
 
 if __name__ == "__main__":
     app.run(debug=True)

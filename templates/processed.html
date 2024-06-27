@@ -11,6 +11,16 @@
         <h1>Processed Video</h1>
         <video width="640" height="480" controls src="{{ url_for('static', filename=filename) }}" controls="controls"></video>
         <br>
+        <h2>Detection Results:</h2>
+        <ul>
+            {% for detection in detection_data %}
+            <li>
+                <strong>Class:</strong> {{ detection.label }}<br>
+                <strong>Confidence:</strong> {{ detection.confidence }}<br>
+                <strong>Coordinates:</strong> ({{ detection.coordinates[0] }}, {{ detection.coordinates[1] }}, {{ detection.coordinates[2] }}, {{ detection.coordinates[3] }})
+            </li>
+            {% endfor %}
+        </ul>
         <a href="/" class="btn">Upload Another Video</a>
     </div>
 </body>
