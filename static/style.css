@@ -36,7 +36,7 @@ h1 {
     background-color: #0056b3;
 }
 
-#progress-container {
+#ffmpeg-progress-container, #yolo-progress-container {
     width: 100%;
     background-color: #e0e0e0;
     border-radius: 10px;
@@ -44,7 +44,7 @@ h1 {
     margin: 20px 0;
 }
 
-#progress-bar {
+#ffmpeg-progress-bar, #yolo-progress-bar {
     height: 20px;
     width: 0;
     background-color: #76c7c0;

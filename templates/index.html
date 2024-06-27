@@ -13,23 +13,44 @@
             <input type="file" name="file" class="input-file">
             <input type="submit" value="Upload" class="btn" onclick="startProgress()">
         </form>
-        <div id="progress-container">
-            <div id="progress-bar"></div>
+        <div id="ffmpeg-progress-container">
+            <p>Processing with FFmpeg:</p>
+            <div id="ffmpeg-progress-bar"></div>
+        </div>
+        <div id="yolo-progress-container">
+            <p>Processing with YOLO:</p>
+            <div id="yolo-progress-bar"></div>
         </div>
     </div>
     <script>
         function startProgress() {
-            let progressBar = document.getElementById('progress-bar');
-            let width = 0;
-            let interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
+            let ffmpegProgressBar = document.getElementById('ffmpeg-progress-bar');
+            let yoloProgressBar = document.getElementById('yolo-progress-bar');
+            let ffmpegWidth = 0;
+            let yoloWidth = 0;
+
+            let ffmpegInterval = setInterval(() => {
+                if (ffmpegWidth >= 100) {
+                    clearInterval(ffmpegInterval);
                 } else {
-                    fetch('/progress')
+                    fetch('/ffmpeg_progress')
                         .then(response => response.json())
                         .then(data => {
-                            width = data.progress;
-                            progressBar.style.width = width + '%';
+                            ffmpegWidth = data.progress;
+                            ffmpegProgressBar.style.width = ffmpegWidth + '%';
+                        });
+                }
+            }, 1000);
+
+            let yoloInterval = setInterval(() => {
+                if (yoloWidth >= 100) {
+                    clearInterval(yoloInterval);
+                } else {
+                    fetch('/yolo_progress')
+                        .then(response => response.json())
+                        .then(data => {
+                            yoloWidth = data.progress;
+                            yoloProgressBar.style.width = yoloWidth + '%';
                         });
                 }
             }, 1000);

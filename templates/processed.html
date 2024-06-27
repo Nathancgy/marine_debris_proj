@@ -9,9 +9,7 @@
 <body>
     <div class="container">
         <h1>Processed Video</h1>
-        <video width="640" height="480" controls>
-            <source src="">
-        </video>
+        <video width="640" height="480" controls src="{{ url_for('static', filename=filename) }}" controls="controls"></video>
         <br>
         <a href="/" class="btn">Upload Another Video</a>
     </div>
