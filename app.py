@@ -3,6 +3,7 @@ from ultralytics import YOLO
 import cv2
 import os
 import subprocess
+import shutil
 
 app = Flask(__name__)
 model = YOLO("weights.pt")
@@ -48,6 +49,9 @@ def combine_frames(input_pattern, output_video, framerate=30):
     ]
     subprocess.run(combine_frames_command, check=True)
 
+def delete_frames(folder):
+    shutil.rmtree(folder)
+
 def process_video(file_path):
     global progress
     frames_folder = app.config['FRAMES_FOLDER']
@@ -79,6 +83,9 @@ def process_video(file_path):
 
     # Combine frames back into a video
     combine_frames(f'{frames_folder}/{frame_pattern}', output_path)
+
+    # Delete the frames
+    delete_frames(frames_folder)
 
 @app.route('/processed/<filename>')
 def processed_file(filename):
