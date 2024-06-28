@@ -27,7 +27,7 @@ fps = vidcap.get(cv2.CAP_PROP_FPS)
 length = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
 
 vt = VisTrack()
-model = YOLO("../weights2.pt")
+model = YOLO("../yolov10/weights.pt")
 
 folder_out = "Track"
 if os.path.exists(folder_out):
