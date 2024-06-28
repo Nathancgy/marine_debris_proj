@@ -1,8 +1,8 @@
 
-Marine Debris - v3 2024-06-27 6:07am
+Marine Debris - v4 2024-06-28 6:20am
 ==============================
 
-This dataset was exported via roboflow.com on June 27, 2024 at 6:15 AM GMT
+This dataset was exported via roboflow.com on June 28, 2024 at 6:26 AM GMT
 
 Roboflow is an end-to-end computer vision platform that helps you
 * collaborate with your team on computer vision projects
@@ -17,7 +17,7 @@ visit https://github.com/roboflow/notebooks
 
 To find over 100k other datasets and pre-trained models, visit https://universe.roboflow.com
 
-The dataset includes 619 images.
+The dataset includes 428 images.
 Marine-debris are annotated in YOLOv9 format.
 
 The following pre-processing was applied to each image:
