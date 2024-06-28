@@ -10,24 +10,15 @@ import cv2
 import matplotlib.pyplot as plt
 from tqdm.auto import tqdm
 import shutil
-from ultralytics import YOLO
+from ultralytics import RTDETR
 import ultralytics
-"""
-results = model.predict(source='test.png')
-results_dict = results[0].__dict__
 
-p_img = PIL.Image.open('test.png')
-boxes = results_dict['boxes'].xyxy 
-classes = results_dict['boxes'].cls
-scores = results_dict['boxes'].conf 
-vt.draw_bounding_boxes(p_img, boxes.numpy(), classes.numpy(), scores.numpy(), 20)
-"""
 vidcap = cv2.VideoCapture("k.mp4")
 fps = vidcap.get(cv2.CAP_PROP_FPS)
 length = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
 
 vt = VisTrack()
-model = YOLO("../yolov10/weights.pt")
+model = RTDETR("../rt-detr/weights.pt")
 
 folder_out = "Track"
 if os.path.exists(folder_out):
