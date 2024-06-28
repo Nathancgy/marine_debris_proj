@@ -1,0 +1,6 @@
+train: "Path/train/images" #Add path to training images
+val: "Path/valid/images"
+test: "Path/test/images"
+
+nc: 7
+names: ['can', 'carton', 'plastic bag', 'plastic bottle', 'plastic container', 'styrofoam', 'tire']
