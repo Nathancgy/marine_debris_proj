@@ -2,18 +2,26 @@ import cv2
 from ultralytics import RTDETR
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import numpy as np
 
 # Load the RTDETR model
 model = RTDETR("../weights/rtdetr.pt")
 
 # Open the video file
-video_path = "../k.mp4"
+video_path = "k.mp4"
 cap = cv2.VideoCapture(video_path)
-fps = cap.get(cv2.CAP_PROP_FPS)
-print(f"Frames per second: {fps}")
 
-framecount = 0
-tracking_data = []
+
+fps = cap.get(cv2.CAP_PROP_FPS)
+width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+out_video_path = 'tracked_video.mp4'
+out = cv2.VideoWriter(out_video_path, fourcc, fps, (width, height))
+
+
+
 
 class_names = ['can', 'carton', 'p-bag', 'p-bottle', 'p-con', 'styrofoam', 'tire']
 class_counts = [0] * 7
@@ -24,6 +32,10 @@ current_time = 0
 
 fig, ax = plt.subplots()
 bars = ax.bar(class_names, class_counts, color=['blue', 'orange', 'green', 'red', 'purple', 'brown', 'pink'])
+
+
+out2_video_path = 'barchart_video.mp4'
+out2 = cv2.VideoWriter(out2_video_path, fourcc, 1, (width,height))
 
 ax.set_xlabel('Classes')
 ax.set_ylabel('Counts')
@@ -39,7 +51,11 @@ def update_bars(frame_data):
         bar.set_height(count)
     time_text.set_text(f'Time: {second} s')
 
+print(f"Frames per second: {fps}")
+
+
 # Loop through the video frames
+framecount = 0
 while cap.isOpened():
     # Read a frame from the video
     success, frame = cap.read()
@@ -49,7 +65,13 @@ while cap.isOpened():
         
         # Run RTDETR tracking on the frame, persisting tracks between frames
         results = model.track(frame, persist=True)
-        
+
+        print (results[0])
+
+        annotated_frame = results[0].plot()  # Plot the results on the frame
+
+        cv2.imshow('RT-DETR', annotated_frame)       
+
         frame_data = []
         
         # Extract tracking information from results
@@ -57,59 +79,31 @@ while cap.isOpened():
             for obj in results[0].boxes:
                 class_id = int(obj.cls)
                 track_id = int(obj.id)
-                confidence = float(obj.conf)
-                bbox = obj.xyxy.tolist()
-                frame_data.append({
-                    'frame_idx': framecount,
-                    'class_id': class_id,
-                    'track_id': track_id,
-                    'confidence': confidence,
-                    'bbox': bbox
-                })
+                if track_id not in seen_track_ids:
+                    seen_track_ids.add(track_id)
+                    class_counts[class_id] += 1
         
-        tracking_data.append(frame_data)
+        if framecount%fps ==0:
+            current_time += 1
+            frame_data.append((class_counts[:], current_time))
+            update_bars(frame_data[0])
+            fig.canvas.draw()
+            plot_img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+            plot_img = plot_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+            out2.write
         
-        # Write tracking information to file for this frame
-        with open("tracking_info.txt", "a") as f:
-            for obj in frame_data:
-                f.write(f"Frame: {obj['frame_idx']}, Class ID: {obj['class_id']}, Track ID: {obj['track_id']}, Confidence: {obj['confidence']}, BBox: {obj['bbox']}\n")
+        # Write the annotated frame to the video file
+        out.write(annotated_frame)
 
-        print(f"Tracking information for frame {framecount} saved to tracking_info.txt")
+
         framecount += 1
 
-        # Update class counts and frame data for animation
-        with open("tracking_info.txt", "r") as f:
-            lines = f.readlines()
-
-        for line in lines:
-            parts = line.split(", ")
-            frame_idx = int(parts[0].split(": ")[1])
-            class_id = int(parts[1].split(": ")[1])
-            track_id = int(parts[2].split(": ")[1])
-
-            if frame_idx not in unique_frame_ids:
-                unique_frame_ids.add(frame_idx)
-                if len(unique_frame_ids) % fps == 0:
-                    current_time += 1
-                    frame_data.append((class_counts[:], current_time))
-
-            if track_id not in seen_track_ids:
-                seen_track_ids.add(track_id)
-                class_counts[class_id] += 1
-
-        # If the current frame count modulo fps is not zero, append the current data
-        if len(unique_frame_ids) % fps != 0:
-            frame_data.append((class_counts[:], current_time))
-
-        # Update animation with the latest frame data
-        ani = animation.FuncAnimation(fig, update_bars, frames=frame_data, repeat=False)
+    
 
     else:
         print('End of video')
         break
 
-# Save the animation
-ani.save('class_counts_video.mp4', writer='ffmpeg', fps=1)
-
-# Release the video capture object
+# Release the video capture object and the video writer object
 cap.release()
+
