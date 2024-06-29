@@ -12,11 +12,11 @@ video_path = "k.mp4"
 cap = cv2.VideoCapture(video_path)
 
 
-fps = cap.get(cv2.CAP_PROP_FPS)
+fps = int(cap.get(cv2.CAP_PROP_FPS))
 width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+fourcc=cv2.VideoWriter.fourcc("M", "P", "4", "V")
 out_video_path = 'tracked_video.mp4'
 out = cv2.VideoWriter(out_video_path, fourcc, fps, (width, height))
 
@@ -55,22 +55,24 @@ print(f"Frames per second: {fps}")
 
 
 # Loop through the video frames
-framecount = 0
+framecount = 1
 while cap.isOpened():
     # Read a frame from the video
     success, frame = cap.read()
 
     if success:
-        print(f"Processing frame {framecount}...")
-        
-        # Run RTDETR tracking on the frame, persisting tracks between frames
+        # Run YOLOv8 tracking on the frame, persisting tracks between frames
         results = model.track(frame, persist=True)
 
-        print (results[0])
+        # Visualize the results on the frame
+        annotated_frame = results[0].plot()
 
-        annotated_frame = results[0].plot()  # Plot the results on the frame
+        # Display the annotated frame
+        cv2.imshow("YOLOv8 Tracking", annotated_frame)
 
-        cv2.imshow('RT-DETR', annotated_frame)       
+        # Break the loop if 'q' is pressed
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break      
 
         frame_data = []
         
@@ -88,9 +90,10 @@ while cap.isOpened():
             frame_data.append((class_counts[:], current_time))
             update_bars(frame_data[0])
             fig.canvas.draw()
-            plot_img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
-            plot_img = plot_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-            out2.write
+            fig.show()
+            fig.savefig('latest_chart.png')
+            plt_img = cv2.imread('latest_chart.png')
+            out2.write(plt_img)
         
         # Write the annotated frame to the video file
         out.write(annotated_frame)
