@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contribute Your Dataset</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="{{ url_for('contribute') }}"><i class="fas fa-upload"></i> Contribute</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>Contribute Your Dataset</h1>
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+        <form id="contributeForm" action="/contribute" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <div class="form-section">
+                <label for="name">Your Name (optional):</label>
+                <input type="text" name="name" id="name" class="input-text">
+            </div>
+            <div class="form-section">
+                <h2>Upload Video</h2>
+                <input type="file" name="video" id="video" class="input-file">
+            </div>
+            <div class="form-section">
+                <h2>Upload YOLO/COCO Dataset</h2>
+                <label for="images">Images:</label>
+                <input type="file" name="images" id="images" multiple class="input-file">
+                <label for="labels">Labels:</label>
+                <input type="file" name="labels" id="labels" class="input-file">
+            </div>
+            <input type="submit" value="Contribute" class="btn">
+        </form>
+    </div>
+    <script>
+        function validateForm() {
+            const video = document.getElementById('video').files.length;
+            const images = document.getElementById('images').files.length;
+            const labels = document.getElementById('labels').files.length;
+            
+            if (video === 0 && images === 0 && labels === 0) {
+                alert('Please upload at least one file.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

@@ -6,7 +6,7 @@ import subprocess
 import shutil
 
 app = Flask(__name__)
-model = YOLO("weights.pt")
+model = YOLO("yolov10n/weights.pt")
 
 UPLOAD_FOLDER = 'uploads'
 PROCESSED_FOLDER = 'static'
@@ -86,13 +86,11 @@ def process_video(file_path):
             for box in boxes:
                 x1, y1, x2, y2 = box.xyxy[0]
                 label = result.names[int(box.cls)]
-                confidence = box.conf.item()  # Convert tensor to float
+                confidence = box.conf.item()  
 
-                # Draw bounding box and label
                 cv2.rectangle(img, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)
                 cv2.putText(img, f'{label} {confidence:.2f}', (int(x1), int(y1)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
-                # Check if the current detection overlaps with any previous detection
                 current_bbox = (x1, y1, x2, y2)
                 if not any(iou(current_bbox, prev_bbox) > 0.5 for prev_bbox in previous_detections):
                     if label not in detected_objects:
@@ -100,7 +98,6 @@ def process_video(file_path):
                     detected_objects[label] += 1
                     new_detections.append(current_bbox)
 
-                    # Add detection data to the list
                     detection_data.append({
                         'label': label,
                         'confidence': confidence,
@@ -112,10 +109,8 @@ def process_video(file_path):
         yolo_progress = int((i / total_frames) * 100)
         print(f'Processing frame {i+1}/{total_frames} ({yolo_progress}%)')
 
-    # Combine frames back into a video
     combine_frames(f'{frames_folder}/{frame_pattern}', output_path)
 
-    # Delete the frames
     delete_frames(frames_folder)
 
     print(f"Detected objects: {detected_objects}")
@@ -124,20 +119,16 @@ def iou(bbox1, bbox2):
     x1_min, y1_min, x1_max, y1_max = bbox1
     x2_min, y2_min, x2_max, y2_max = bbox2
 
-    # Calculate the (x, y)-coordinates of the intersection rectangle
     inter_x_min = max(x1_min, x2_min)
     inter_y_min = max(y1_min, y2_min)
     inter_x_max = min(x1_max, x2_max)
     inter_y_max = min(y1_max, y2_max)
 
-    # Compute the area of intersection rectangle
     inter_area = max(0, inter_x_max - inter_x_min) * max(0, inter_y_max - inter_y_min)
 
-    # Compute the area of both the prediction and ground-truth rectangles
     bbox1_area = (x1_max - x1_min) * (y1_max - y1_min)
     bbox2_area = (x2_max - x2_min) * (y2_max - y2_min)
 
-    # Compute the intersection over union by taking the intersection area and dividing it by the sum of prediction + ground-truth areas - the intersection area
     iou = inter_area / float(bbox1_area + bbox2_area - inter_area)
 
     return iou
@@ -155,6 +146,41 @@ def get_yolo_progress():
 @app.route('/processed/<filename>')
 def processed_file(filename):
     return render_template('processed.html', filename='processed_' + filename, detection_data=detection_data)
+
+@app.route('/contribute', methods=['GET', 'POST'])
+def contribute():
+    if request.method == 'POST':
+        name = request.form.get('name', 'you')
+
+        video_file = request.files.get('video')
+        image_files = request.files.getlist('images')
+        label_file = request.files.get('labels')
+
+        if not video_file and not image_files and not label_file:
+            return render_template('contribute.html', error='Please upload at least one file.')
+
+        if video_file and video_file.filename != '':
+            video_path = os.path.join(app.config['UPLOAD_FOLDER'], 'contributed_videos', video_file.filename)
+            os.makedirs(os.path.dirname(video_path), exist_ok=True)
+            video_file.save(video_path)
+
+        if image_files and label_file and label_file.filename != '':
+            for image_file in image_files:
+                if image_file.filename != '':
+                    image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'contributed_images', image_file.filename)
+                    os.makedirs(os.path.dirname(image_path), exist_ok=True)
+                    image_file.save(image_path)
+
+            label_path = os.path.join(app.config['UPLOAD_FOLDER'], 'contributed_labels', label_file.filename)
+            os.makedirs(os.path.dirname(label_path), exist_ok=True)
+            label_file.save(label_path)
+
+        with open('contributors.txt', 'a') as file:
+            file.write(f'{name}\n')
+
+        return render_template('contribute_success.html', name=name)
+    
+    return render_template('contribute.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
