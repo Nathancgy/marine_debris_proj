@@ -27,7 +27,7 @@ os.makedirs(folder_out)
 
 draw_imgs = []
 
-sort = Sort(max_age=45, min_hits=3, iou_threshold=0.2)
+sort = Sort(max_age=60, min_hits=3, iou_threshold=0.1)
 
 pbar = tqdm(total=length)
 i = 0
