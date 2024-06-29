@@ -7,6 +7,42 @@ body {
     color: #333;
 }
 
+header {
+    background-color: #007BFF;
+    padding: 20px 0;
+    color: white;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+nav ul li a i {
+    margin-right: 8px;
+}
+
+nav ul li a:hover {
+    color: #ffdd57;
+}
+
 .container {
     max-width: 800px;
     margin: 50px auto;
@@ -35,6 +71,20 @@ h2 {
 
 form {
     margin-bottom: 30px;
+}
+
+.input-text {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    width: 80%;
+    border: 2px solid #007BFF;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+}
+
+.input-text:focus {
+    border-color: #0056b3;
 }
 
 .input-file {
@@ -68,43 +118,14 @@ form {
     transform: translateY(-3px);
 }
 
-#ffmpeg-progress-container, #yolo-progress-container {
-    width: 100%;
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 20px 0;
-    position: relative;
+.form-section {
+    margin-bottom: 30px;
 }
 
-#ffmpeg-progress-bar, #yolo-progress-bar {
-    height: 20px;
-    width: 0;
-    background-color: #76c7c0;
-    transition: width 0.5s ease;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    background: #f9f9f9;
-    margin: 10px 0;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, background-color 0.3s;
-}
-
-li:hover {
-    transform: scale(1.02);
-    background-color: #eef;
-}
-
-strong {
-    color: #333;
+label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #555;
 }
 
 /* Responsive Styles */
@@ -120,10 +141,6 @@ strong {
     h2 {
         font-size: 1.2em;
     }
-
-    li {
-        padding: 10px;
-    }
 }
 
 @media (max-width: 480px) {
@@ -138,10 +155,5 @@ strong {
     .btn {
         padding: 8px 16px;
         font-size: 0.9em;
-    }
-
-    video {
-        width: 100%;
-        height: auto;
     }
 }

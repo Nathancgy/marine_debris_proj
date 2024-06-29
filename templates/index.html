@@ -5,8 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marine Debris Detection</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="{{ url_for('contribute') }}"><i class="fas fa-upload"></i> Contribute</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="container">
         <h1>Upload Video for Marine Debris Detection</h1>
         <form action="/upload" method="post" enctype="multipart/form-data">
