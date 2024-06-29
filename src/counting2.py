@@ -35,7 +35,7 @@ bars = ax.bar(class_names, class_counts, color=['blue', 'orange', 'green', 'red'
 
 
 out2_video_path = 'barchart_video.mp4'
-out2 = cv2.VideoWriter(out2_video_path, fourcc, 1, (width,height))
+out2 = cv2.VideoWriter(out2_video_path, fourcc, 1, (640,480))
 
 ax.set_xlabel('Classes')
 ax.set_ylabel('Counts')
