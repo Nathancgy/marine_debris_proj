@@ -11,7 +11,7 @@ model = RTDETR("../weights/rtdetr.pt")
 video_path = "k.mp4"
 cap = cv2.VideoCapture(video_path)
 
-
+length = int(cap. get(cv2. CAP_PROP_FRAME_COUNT))
 fps = int(cap.get(cv2.CAP_PROP_FPS))
 width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -61,6 +61,7 @@ while cap.isOpened():
     success, frame = cap.read()
 
     if success:
+        print(f"processing frame{framecount}/{length}")
         # Run YOLOv8 tracking on the frame, persisting tracks between frames
         results = model.track(frame, persist=True)
 
@@ -85,12 +86,11 @@ while cap.isOpened():
                     seen_track_ids.add(track_id)
                     class_counts[class_id] += 1
         
-        if framecount%fps ==0:
+        if framecount%fps ==0 or framecount==length:
             current_time += 1
             frame_data.append((class_counts[:], current_time))
             update_bars(frame_data[0])
             fig.canvas.draw()
-            fig.show()
             fig.savefig('latest_chart.png')
             plt_img = cv2.imread('latest_chart.png')
             out2.write(plt_img)
