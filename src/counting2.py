@@ -20,9 +20,6 @@ fourcc=cv2.VideoWriter.fourcc("M", "P", "4", "V")
 out_video_path = 'tracked_video.mp4'
 out = cv2.VideoWriter(out_video_path, fourcc, fps, (width, height))
 
-
-
-
 class_names = ['can', 'carton', 'p-bag', 'p-bottle', 'p-con', 'styrofoam', 'tire']
 class_counts = [0] * 7
 seen_track_ids = set()
@@ -53,31 +50,23 @@ def update_bars(frame_data):
 
 print(f"Frames per second: {fps}")
 
-
-# Loop through the video frames
 framecount = 1
 while cap.isOpened():
-    # Read a frame from the video
     success, frame = cap.read()
 
     if success:
         print(f"processing frame{framecount}/{length}")
-        # Run YOLOv8 tracking on the frame, persisting tracks between frames
         results = model.track(frame, persist=True)
 
-        # Visualize the results on the frame
         annotated_frame = results[0].plot()
 
-        # Display the annotated frame
-        cv2.imshow("YOLOv8 Tracking", annotated_frame)
+        cv2.imshow("RT-DETR Tracking", annotated_frame)
 
-        # Break the loop if 'q' is pressed
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break      
 
         frame_data = []
         
-        # Extract tracking information from results
         if hasattr(results[0], 'boxes'):
             for obj in results[0].boxes:
                 class_id = int(obj.cls)
@@ -95,7 +84,6 @@ while cap.isOpened():
             plt_img = cv2.imread('latest_chart.png')
             out2.write(plt_img)
         
-        # Write the annotated frame to the video file
         out.write(annotated_frame)
 
 
@@ -107,6 +95,5 @@ while cap.isOpened():
         print('End of video')
         break
 
-# Release the video capture object and the video writer object
 cap.release()
 
