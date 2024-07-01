@@ -8,7 +8,7 @@ import numpy as np
 model = RTDETR("../weights/rtdetr.pt")
 
 # Open the video file
-video_path = "k.mp4"
+video_path = "C:/Users/vikas/OneDrive/Documents/Programs/Python/Machine Learning/ObjectDetection/Yolov10/Drone Videos/DJI_0033.MP4"
 cap = cv2.VideoCapture(video_path)
 
 length = int(cap. get(cv2. CAP_PROP_FRAME_COUNT))
@@ -19,6 +19,7 @@ height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 fourcc=cv2.VideoWriter.fourcc("M", "P", "4", "V")
 out_video_path = 'tracked_video.mp4'
 out = cv2.VideoWriter(out_video_path, fourcc, fps, (width, height))
+
 
 class_names = ['can', 'carton', 'p-bag', 'p-bottle', 'p-con', 'styrofoam', 'tire']
 class_counts = [0] * 7
@@ -50,23 +51,41 @@ def update_bars(frame_data):
 
 print(f"Frames per second: {fps}")
 
+
+# Loop through the video frames
 framecount = 1
 while cap.isOpened():
+    # Read a frame from the video
     success, frame = cap.read()
 
     if success:
         print(f"processing frame{framecount}/{length}")
+        # Run YOLOv8 tracking on the frame, persisting tracks between frames
         results = model.track(frame, persist=True)
+        annotated_frame=frame.copy()
 
-        annotated_frame = results[0].plot()
+        for result in results:
+            boxes = result.boxes
+            for box in boxes:
+                x1, y1, x2, y2 = box.xyxy[0]
+                label = result.names[int(box.cls)]
+                confidence = box.conf.item()
+                id=box.id.numpy()
+                id=int(id[-1])
 
+                cv2.rectangle(annotated_frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
+                cv2.putText(annotated_frame, f'{label} {confidence:.2f}, id:{id}', (int(x1), int(y1)), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
+        # Display the annotated frame
         cv2.imshow("RT-DETR Tracking", annotated_frame)
 
+        # Break the loop if 'q' is pressed
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break      
 
         frame_data = []
         
+        # Extract tracking information from results
         if hasattr(results[0], 'boxes'):
             for obj in results[0].boxes:
                 class_id = int(obj.cls)
@@ -74,6 +93,10 @@ while cap.isOpened():
                 if track_id not in seen_track_ids:
                     seen_track_ids.add(track_id)
                     class_counts[class_id] += 1
+                    if class_counts[class_id] > 20:
+                        ax.set_ylim(0, class_counts[class_id])
+                
+
         
         if framecount%fps ==0 or framecount==length:
             current_time += 1
@@ -84,6 +107,7 @@ while cap.isOpened():
             plt_img = cv2.imread('latest_chart.png')
             out2.write(plt_img)
         
+        # Write the annotated frame to the video file
         out.write(annotated_frame)
 
 
@@ -95,5 +119,5 @@ while cap.isOpened():
         print('End of video')
         break
 
+# Release the video capture object and the video writer object
 cap.release()
-
