@@ -3,7 +3,6 @@ import matplotlib.animation as animation
 import cv2
 
 def drawchart(fps, txt_path, video_path):
-
     video_capture = cv2.VideoCapture(video_path)
 
     if not video_capture.isOpened():
@@ -25,15 +24,17 @@ def drawchart(fps, txt_path, video_path):
     ax.set_xlabel('Classes')
     ax.set_ylabel('Counts')
     ax.set_title('Dynamic Class Counts Over Time')
-    ax.set_ylim(0, 20)
+    ax.set_ylim(0, 1)
     ax.yaxis.get_major_locator().set_params(integer=True)
 
     time_text = ax.text(0.95, 0.95, '', transform=ax.transAxes, ha='right', va='top', fontsize=12)
 
     def update_bars(frame_data):
         counts, second = frame_data
+        max_count = max(counts)
         for bar, count in zip(bars, counts):
             bar.set_height(count)
+        ax.set_ylim(0, max(1, max_count))
         time_text.set_text(f'Time: {second} s')
 
     with open(txt_path, "r") as f:
@@ -60,4 +61,4 @@ def drawchart(fps, txt_path, video_path):
 
     ani = animation.FuncAnimation(fig, update_bars, frames=frame_data, repeat=False)
 
-    ani.save('class_counts_video.mp4', writer='ffmpeg', fps=1)
+    ani.save('static/class_counts_video.mp4', writer='ffmpeg', fps=1)

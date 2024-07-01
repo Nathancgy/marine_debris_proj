@@ -26,15 +26,15 @@
             <p>Processing with FFmpeg:</p>
             <div id="ffmpeg-progress-bar" style="width: 0%; height: 20px; background-color: green;"></div>
         </div>
-        <div id="yolo-progress-container">
-            <p>Processing with YOLO:</p>
-            <div id="yolo-progress-bar" style="width: 0%; height: 20px; background-color: blue;"></div>
+        <div id="rtdetr-progress-container">
+            <p>Processing with RT-DETR:</p>
+            <div id="rtdetr-progress-bar" style="width: 0%; height: 20px; background-color: blue;"></div>
         </div>
     </div>
     <script>
         function startProgress() {
             let ffmpegProgressBar = document.getElementById('ffmpeg-progress-bar');
-            let yoloProgressBar = document.getElementById('yolo-progress-bar');
+            let rtdetrProgressBar = document.getElementById('rtdetr-progress-bar');
 
             let ffmpegInterval = setInterval(() => {
                 fetch('/ffmpeg_progress')
@@ -47,13 +47,13 @@
                     });
             }, 1000);
 
-            let yoloInterval = setInterval(() => {
-                fetch('/yolo_progress')
+            let rtdetrInterval = setInterval(() => {
+                fetch('/rtdetr_progress')
                     .then(response => response.json())
                     .then(data => {
-                        yoloProgressBar.style.width = data.progress + '%';
+                        rtdetrProgressBar.style.width = data.progress + '%';
                         if (data.progress >= 100) {
-                            clearInterval(yoloInterval);
+                            clearInterval(rtdetrInterval);
                         }
                     });
             }, 1000);
