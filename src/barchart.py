@@ -34,7 +34,7 @@ def drawchart(fps, txt_path, video_path):
         max_count = max(counts)
         for bar, count in zip(bars, counts):
             bar.set_height(count)
-        ax.set_ylim(0, max(1, max_count))
+        ax.set_ylim(0, max(1, max_count+20))
         time_text.set_text(f'Time: {second} s')
 
     with open(txt_path, "r") as f:

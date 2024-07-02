@@ -46,7 +46,7 @@ def upload_file():
         try:
             subprocess.run([
                 'python3', 'src/VideoCombine.py', 
-                video_path_2, processed_video_path, video_path_3, video_path_4, combined_video_path
+                "src/styro.mp4", "src/styro.mp4", video_path_3, video_path_4, combined_video_path
             ], check=True)
         except subprocess.CalledProcessError as e:
             flash(f'An error occurred while combining the videos: {e}')
