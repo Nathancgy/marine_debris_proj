@@ -7,7 +7,7 @@ import imageio_ffmpeg as ffmpeg
 
 model = RTDETR("../weights/rtdetr.pt")
 
-video_path = 'C:/Users/vikas/OneDrive/Documents/Programs/Python/Machine Learning/ObjectDetection/Yolov10/Drone Videos/DJI_0033.MP4'
+video_path = 'k2.mp4'
 cap = cv2.VideoCapture(video_path)
 
 length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) 
