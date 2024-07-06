@@ -39,7 +39,14 @@ ax.yaxis.get_major_locator().set_params(integer=True)
 
 time_text = ax.text(0.95, 0.95, '', transform=ax.transAxes, ha='right', va='top', fontsize=12)
 
-
+def removezeros(class_names,class_areas):
+    new_class_areas=[]
+    new_class_names=[]
+    for i in range(len(class_areas)):
+        if class_areas[i]!=0:
+            new_class_areas.append(class_areas[i])
+            new_class_names.append(class_names[i])
+    return new_class_names,new_class_areas
 
 def add_text_with_background(img, text, pos, font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=0.7, color=(139, 0, 0), thickness=2, bg_color=(255, 255, 255)):
     # Get the size of the text
@@ -108,7 +115,7 @@ while cap.isOpened():
                 else:
                     area_ratio = 1  # Default ratio if class not found
 
-                predicted_area = bbox_area * area_ratio
+                predicted_area = int(bbox_area * area_ratio)
 
                 # Draw bounding box
                 cv2.rectangle(annotated_frame, (int(x1), int(y1)), (int(x2), int(y2)), (139, 0, 0), 4)
@@ -125,7 +132,7 @@ while cap.isOpened():
                 if track_id not in seen_track_ids:
                     seen_track_ids.add(track_id)
                     class_counts[class_id] += 1
-                    class_areas[class_id] += predicted_area
+                    class_areas[class_id] += int(predicted_area)
                     if class_counts[class_id] > 20:
                         ax.set_ylim(0, class_counts[class_id])
             
@@ -139,7 +146,9 @@ while cap.isOpened():
             plt_img = cv2.imread('latest_chart.png')
             fig2, ax2 = plt.subplots()
             ax2.set_title('Dynamic Class Areas Over Time (%)')
-            pie = ax2.pie(class_areas, labels=class_names, autopct='%1.1f%%', startangle=140,colors=colors)
+            new_class_names,new_class_areas = removezeros(class_names,class_areas)
+            print (new_class_names,new_class_areas)
+            pie = ax2.pie(new_class_areas, labels=new_class_names, autopct='%1.1f%%', startangle=140,colors=colors)
             ax2.axis('equal')
             fig2.canvas.draw()
             fig2.savefig('latest_pie_chart.png')
