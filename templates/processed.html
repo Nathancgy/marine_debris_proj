@@ -11,6 +11,8 @@
         <h1>Processed Video</h1>
         <video width="640" height="480" controls src="{{ url_for('static', filename=filename) }}" controls="controls"></video>
         <br>
+        <video width="640" height="480" controls src="{{ url_for('static', filename='class_counts_video.mp4') }}" controls="controls"></video>
+        <br>
         <h2>Detection Results:</h2>
         <ul>
             {% for detection in detection_data %}
