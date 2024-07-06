@@ -39,14 +39,16 @@ ax.yaxis.get_major_locator().set_params(integer=True)
 
 time_text = ax.text(0.95, 0.95, '', transform=ax.transAxes, ha='right', va='top', fontsize=12)
 
-def removezeros(class_names,class_areas):
+def removezeros(class_names,class_areas,colors):
     new_class_areas=[]
     new_class_names=[]
+    new_colors=[]
     for i in range(len(class_areas)):
         if class_areas[i]!=0:
             new_class_areas.append(class_areas[i])
             new_class_names.append(class_names[i])
-    return new_class_names,new_class_areas
+            new_colors.append(colors[i])
+    return new_class_names,new_class_areas, new_colors
 
 def add_text_with_background(img, text, pos, font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=0.7, color=(139, 0, 0), thickness=2, bg_color=(255, 255, 255)):
     # Get the size of the text
@@ -146,9 +148,8 @@ while cap.isOpened():
             plt_img = cv2.imread('latest_chart.png')
             fig2, ax2 = plt.subplots()
             ax2.set_title('Dynamic Class Areas Over Time (%)')
-            new_class_names,new_class_areas = removezeros(class_names,class_areas)
-            print (new_class_names,new_class_areas)
-            pie = ax2.pie(new_class_areas, labels=new_class_names, autopct='%1.1f%%', startangle=140,colors=colors)
+            new_class_names,new_class_areas,new_colors = removezeros(class_names,class_areas,colors)
+            pie = ax2.pie(new_class_areas, labels=new_class_names, autopct='%1.1f%%', startangle=140,colors=new_colors)
             ax2.axis('equal')
             fig2.canvas.draw()
             fig2.savefig('latest_pie_chart.png')
