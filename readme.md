@@ -65,6 +65,8 @@ python app.py
 ```
 Upload a video and view the processed results on the website.
 
+<img width="894" alt="Screenshot 2024-07-10 at 21 27 14" src="https://github.com/Nathancgy/marine_debris_proj/assets/120630832/46b62f7d-ee45-4707-b992-f25e55d209a8">
+
 ## Future Work
 This project is in the development phase and aims to be implemented in real-world scenarios.
 
