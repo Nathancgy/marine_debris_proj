@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import cv2 
 import numpy as np
 
-model = RTDETR("../weights/rtdetr.pt")
+model = RTDETR("../rt-detr/weights.pt")
 
-video_path = 'k.mp4'
+video_path = '/Users/nathanchen/Desktop/vid.mp4'
 cap = cv2.VideoCapture(video_path)
 
 length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) 
