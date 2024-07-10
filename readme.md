@@ -15,10 +15,8 @@ This repository contains a Real-Time DEtection TRansformer (RT-DETR)-based proje
 <img src = 'https://github.com/Nathancgy/marine_debris_proj/blob/main/img/val_pred.jpg?raw=true' width = '600'>
 
 ### Sample Result in real time detection video.
-<video width="640" height="480" controls>
-  <source src="https://github.com/Nathancgy/marine_debris_proj/blob/main/img/demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/Nathancgy/marine_debris_proj/assets/120630832/f70065f3-e645-4b01-becf-b8d7c3d9b9b4
+
 
 ### Confusion Matrix
 <img src='https://github.com/Nathancgy/marine_debris_proj/blob/main/img/confusion_matrix.png?raw=true' width='600'>
